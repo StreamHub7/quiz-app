@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const fs = require('fs');
 const app = express();
 const PORT = 5000;
 
@@ -66,8 +67,7 @@ async function handleEvent(id) {
         if (playbackObj && playbackObj.url) {
           // Redirect to the video_token URL
           console.log(playbackObj.url);
-          return playbackObj.url;
-
+          fs.writeFileSync('url.json', JSON.stringify({videoUrl: playbackObj.url}));
         } else {
           return 'No playback URL found';
         }
@@ -81,11 +81,12 @@ async function handleEvent(id) {
     
 app.get('/api/events/:id',async (req, res) => {
     const id = req.params.id;
-    const url = await handleEvent(id);
+    await handleEvent(id);
+    const url = fs.readFileSync('url.json', 'utf8');
     console.log(url);
     if (url) {
         res.send({
-            url
+            url: JSON.parse(url).videoUrl
         });
     } else {
         res.status(404).send('Event not found');
