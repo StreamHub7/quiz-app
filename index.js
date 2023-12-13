@@ -65,15 +65,9 @@ async function handleEvent(id) {
         let playbackObj = playbackUrls.find((obj) => obj.streamtype === 'hls');
         if (playbackObj && playbackObj.url) {
           // Redirect to the video_token URL
-<<<<<<< HEAD:index.js
           console.log(playbackObj.url);
           return playbackObj.url;
-=======
-          const video = document.getElementById("video");
-          console.log(playbackObj.url);
-          video.textContent = playbackObj.url;
-          video.href = playbackObj.url;
->>>>>>> 092698214693698c11e016b698595b1707cc759d:temp.js
+
         } else {
           return 'No playback URL found';
         }
