@@ -70,6 +70,7 @@ async function handleEvent(id) {
           // Redirect to the video_token URL
           console.log(playbackObj.url);
           fs.writeFileSync('url.json', JSON.stringify({videoUrl: playbackObj.url}));
+          return "OK";
         } else {
           return 'No playback URL found';
         }
@@ -83,15 +84,14 @@ async function handleEvent(id) {
     
 app.get('/api/events/:id',async (req, res) => {
     const id = req.params.id;
-    await handleEvent(id);
-    const url = fs.readFileSync('url.json', 'utf8');
-    console.log(url);
-    if (url) {
+    const result = await handleEvent(id);
+    if(result === 'OK') {
+        const url = fs.readFileSync('url.json', 'utf8');
         res.send({
             url: JSON.parse(url).videoUrl
         });
     } else {
-        res.status(404).send('Event not found');
+        res.status(500).send(result);
     }
 });
 
