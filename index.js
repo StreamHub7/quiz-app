@@ -75,14 +75,12 @@ async function handleEvent(channel_ID) {
 app.get('/index.php', async (req, res) => {
   try {
       const channel_ID = req.query.id;
-
-      if (!channel_ID) {
-        res.status(400).send('Missing channel ID');
-        return;
+      const videoUrl = await handleEvent(channel_ID);
+      if(videoUrl) {
+        res.redirect(videoUrl);
       }
       else {
-        const videoUrl = await handleEvent(channel_ID);
-        res.redirect(videoUrl);
+        res.status(500).send('Error in url fetching');
       }
   } catch(error) {
     console.log('Error:', error);
